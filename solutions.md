@@ -3,6 +3,7 @@
 1.  [Merge k Sorted Lists](#merge-k-sorted-lists)
 2.  [Add Two Numbers](#add-two-numbers)
 3.  [House Robber](#house-robber)
+4.  [Keys and Rooms](#keys-and-rooms)
 
 ---
 
@@ -88,7 +89,7 @@ ListNode *mergeKLists(vector<ListNode*> &lists) {
  * };
  */
 
-ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+ListNode* addTwoNumbers(ListNode *l1, ListNode *l2) {
     ListNode *result = new ListNode();
     ListNode *resultTail = result;
     int carry = 0;
@@ -116,12 +117,12 @@ ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
 
 ### [House Robber](https://leetcode.com/problems/house-robber/)<a name="house-robber"></a>
 ```C++
-int rob(vector<int>& nums) {
+int rob(vector<int> &nums) {
     // Solutions for the leftmost 0..n houses where we rob the rightmost house
     vector<int> solns;
     
-    solns.push_back(0);  // Buffer value
-    solns.push_back(0);  // Solution for 0 houses
+    solns.push_back(0);        // Buffer value
+    solns.push_back(0);        // Solution for 0 houses
     solns.push_back(nums[0]);  // Solution for 1 house
     
     for (int i = 1; i < nums.size(); ++i) {
@@ -132,5 +133,34 @@ int rob(vector<int>& nums) {
     
     // Final solution either takes the rightmost or the 2nd rightmost house
     return max(solns[solns.size()-1], solns[solns.size()-2]);
+}
+```
+
+### [Keys and Rooms](https://leetcode.com/problems/keys-and-rooms/)<a name="keys-and-rooms"></a>
+```C++
+void dfs(vector<vector<int>> &rooms, vector<bool> &visited, int i) {
+    visited[i] = true;
+
+    // Traverse over room keys and visit new rooms
+    for (int j = 0; j < rooms[i].size(); ++j) {
+        if (!visited[rooms[i][j]]) {
+            dfs(rooms, visited, rooms[i][j]);
+        }
+    }
+}
+
+bool canVisitAllRooms(vector<vector<int>> &rooms) {
+    int n = rooms.size();
+    vector<bool> visited(n, false);
+    int count = 0;
+
+    for (int i = 0; i < n; ++i) {
+        if (!visited[i]) {
+            dfs(rooms, visited, i);
+            ++count;  // Count the number of graph components
+        }
+    }
+
+    return count == 1;
 }
 ```
