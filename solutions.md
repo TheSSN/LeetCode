@@ -2,6 +2,7 @@
 
 1.  [Merge k Sorted Lists](#merge-k-sorted-lists)
 2.  [Add Two Numbers](#add-two-numbers)
+3.  [House Robber](#house-robber)
 
 ---
 
@@ -110,5 +111,26 @@ ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
     ListNode *finalResult = result->next;
     delete result;
     return finalResult;
+}
+```
+
+### [House Robber](https://leetcode.com/problems/house-robber/)<a name="house-robber"></a>
+```C++
+int rob(vector<int>& nums) {
+    // Solutions for the leftmost 0..n houses where we rob the rightmost house
+    vector<int> solns;
+    
+    solns.push_back(0);  // Buffer value
+    solns.push_back(0);  // Solution for 0 houses
+    solns.push_back(nums[0]);  // Solution for 1 house
+    
+    for (int i = 1; i < nums.size(); ++i) {
+        int soln = nums[i] + solns[solns.size()-2];  // Take rightmost and skip 1
+        soln = max(soln, nums[i] + solns[solns.size()-3]);  // Take rightmost and skip 2
+        solns.push_back(soln);
+    }
+    
+    // Final solution either takes the rightmost or the 2nd rightmost house
+    return max(solns[solns.size()-1], solns[solns.size()-2]);
 }
 ```
