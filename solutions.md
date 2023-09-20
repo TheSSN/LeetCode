@@ -4,6 +4,8 @@
 2.  [Add Two Numbers](#add-two-numbers)
 3.  [House Robber](#house-robber)
 4.  [Keys and Rooms](#keys-and-rooms)
+5.  [Network Delay Time](#network-delay-time)
+6.  [Robot Bounded In Circle](#robot-bounded-in-circle)
 
 ---
 
@@ -162,5 +164,114 @@ bool canVisitAllRooms(vector<vector<int>> &rooms) {
     }
 
     return count == 1;
+}
+```
+
+### [Network Delay Time](https://leetcode.com/problems/network-delay-time/)<a name="network-delay-time"></a>
+```C++
+int MAX_TIME = 1000000;  // Value > max possible time
+
+struct Node {
+    int v;  // Target node
+    int w;  // Travel time (i.e. edge weight)
+    Node *next;
+};
+
+int networkDelayTime(vector<vector<int>> &times, int n, int k) {
+    k = k-1;  // For nodes labelled 0..n-1
+
+    // Convert edge list to adjacency list
+    vector<Node*> adjList(n, nullptr);
+    for (int i = 0; i < times.size(); ++i) {
+        int v1 = times[i][0]-1;
+        int v2 = times[i][1]-1;
+        int weight = times[i][2];
+        
+        adjList[v1] = new Node{v2, weight, adjList[v1]};
+    }
+    
+    // Make max heap <-distance, node> (-distance instead of min heap)
+    priority_queue<pair<int, int>> maxHeap;
+    for (int i = 0; i < n; ++i) {
+        maxHeap.push(make_pair(i == k? 0 : -MAX_TIME, i));
+    }
+    
+    vector<bool> visited(n, false);
+    vector<double> dists(n, MAX_TIME);
+    dists[k] = 0;
+    int processed = 0;
+    
+    // Run Dijkstra's Algorithm
+    while (processed < n) {
+        pair<int, int> nextNode;
+        while (true) {
+            nextNode = maxHeap.top();
+            maxHeap.pop();
+            if (!visited[nextNode.second]) {
+                visited[nextNode.second] = true;
+                break;
+            }
+        }
+        
+        int y = nextNode.second;
+        int weight = -nextNode.first;
+        
+        // This would only happen if the node is not connected to root
+        if (weight == MAX_TIME) {
+            break;
+        }
+        
+        for (Node *edge = adjList[y]; edge; edge = edge->next) {
+            if (weight + edge->w < dists[edge->v]) {
+                dists[edge->v] = weight + edge->w;
+                maxHeap.push(make_pair(-dists[edge->v], edge->v));
+            }
+        }
+        ++processed;
+    }
+    
+    int maxTime = 0;
+    for (int i = 0; i < n; ++i) {
+        if (dists[i] > maxTime) {
+            maxTime = dists[i];
+        }
+    }
+    
+    return maxTime == MAX_TIME? -1 : maxTime;
+}
+```
+
+### [Robot Bounded In Circle](https://leetcode.com/problems/robot-bounded-in-circle/)<a name="robot-bounded-in-circle"></a>
+```C++
+bool isRobotBounded(string instructions) {
+    int direction = 0;  // 0: North, 1: East, 2: South, 3: West
+    int x = 0;
+    int y = 0;
+
+    // Go through instruction set 4 times
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < instructions.size(); ++j) {
+            if (instructions[j] == 'G') {
+                if (direction == 0) {
+                    ++y;
+                } else if (direction == 1) {
+                    ++x;
+                } else if (direction == 2) {
+                    --y;
+                } else if (direction == 3) {
+                    --x;
+                }
+            } else if (instructions[j] == 'L') {
+                direction = (direction + 3) % 4;
+            } else if (instructions[j] == 'R') {
+                direction = (direction + 1) % 4;
+            }
+        }
+        // Check if back to initial position (i.e. cycle => movement is bounded)
+        if (direction == 0 && x == 0 && y == 0) {
+            return true;
+        }
+    }
+    return false;
 }
 ```
