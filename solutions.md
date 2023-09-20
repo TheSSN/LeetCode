@@ -1,6 +1,7 @@
 # Index
 
 1.  [Merge k Sorted Lists](#merge-k-sorted-lists)
+2.  [Add Two Numbers](#add-two-numbers)
 
 ---
 
@@ -70,5 +71,44 @@ ListNode *mergeKLists(vector<ListNode*> &lists) {
     }
     
     return mergeKLists(newLists);
+}
+```
+
+### [Add Two Numbers](https://leetcode.com/problems/add-two-numbers/)<a name="add-two-numbers"></a>
+```C++
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    ListNode *result = new ListNode();
+    ListNode *resultTail = result;
+    int carry = 0;
+
+    // Add each digit while keeping track of carry
+    while (l1 || l2 || carry != 0) {
+        int digit1 = l1 ? l1->val : 0;
+        int digit2 = l2 ? l2->val : 0;
+        int sum = digit1 + digit2 + carry;
+
+        carry = sum / 10;
+
+        resultTail->next = new ListNode(sum % 10);
+        resultTail = resultTail->next;
+
+        l1 = l1 ? l1->next : nullptr;
+        l2 = l2 ? l2->next : nullptr;
+    }
+
+    ListNode *finalResult = result->next;
+    delete result;
+    return finalResult;
 }
 ```
