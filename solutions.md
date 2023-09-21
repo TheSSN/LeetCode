@@ -8,6 +8,7 @@
 6.  [Robot Bounded In Circle](#robot-bounded-in-circle)
 7.  [Clone Graph](#clone-graph)
 8.  [Valid Anagram](#valid-anagram)
+9.  [Group Anagrams](#group-anagrams)
 
 ---
 
@@ -331,5 +332,33 @@ bool isAnagram(string s, string t) {
     }
 
     return true;
+}
+```
+
+### [Group Anagrams](https://leetcode.com/problems/group-anagrams/)<a name="group-anagrams"></a>
+```C++
+vector<vector<string>> groupAnagrams(vector<string>& strs) {
+    unordered_map<string, vector<string>> groups;
+
+    for (auto &word : strs) {
+        // Use sorted word as unique signature common among anagrams
+        string signature = word;
+        sort(signature.begin(), signature.end());
+
+        // Add to our map of <signature, anagram group> pairs
+        if (groups.count(signature)) {
+            groups[signature].push_back(word);
+        } else {
+            groups[signature] = vector<string>{word};
+        }
+    }
+
+    // Reformat map into vector of groups of anagrams
+    vector<vector<string>> result;
+    for (auto &group : groups) {
+        result.push_back(move(group.second));
+    }
+
+    return result;
 }
 ```
