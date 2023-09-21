@@ -6,7 +6,7 @@
 4.  [Keys and Rooms](#keys-and-rooms)
 5.  [Network Delay Time](#network-delay-time)
 6.  [Robot Bounded In Circle](#robot-bounded-in-circle)
-6.  [Clone Graph](#clone-graph)
+7.  [Clone Graph](#clone-graph)
 
 ---
 
