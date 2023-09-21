@@ -6,6 +6,7 @@
 4.  [Keys and Rooms](#keys-and-rooms)
 5.  [Network Delay Time](#network-delay-time)
 6.  [Robot Bounded In Circle](#robot-bounded-in-circle)
+6.  [Clone Graph](#clone-graph)
 
 ---
 
@@ -273,5 +274,35 @@ bool isRobotBounded(string instructions) {
         }
     }
     return false;
+}
+```
+
+### [Clone Graph](https://leetcode.com/problems/clone-graph/)<a name="clone-graph"></a>
+```C++
+Node *cloneNode(Node *node, unordered_map<int, Node*> &visitedNodes) {
+    // Check if we've already cloned this node
+    if (visitedNodes.count(node->val)) {
+        return visitedNodes[node->val];
+    }
+
+    // Create new node and store a stub in case of cycles
+    Node *newNode = new Node(node->val);
+    visitedNodes[node->val] = newNode;
+
+    // Recursively clone each neighbour
+    vector<Node*> neighbors;
+    for (int i = 0; i < node->neighbors.size(); ++i) {
+        neighbors.push_back(cloneNode(node->neighbors[i], visitedNodes));
+    }
+    newNode->neighbors = move(neighbors);
+
+    return newNode;
+}
+
+Node *cloneGraph(Node *node) {
+    if (!node) return nullptr;
+    unordered_map<int, Node*> visitedNodes;
+
+    return cloneNode(node, visitedNodes);
 }
 ```
