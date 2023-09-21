@@ -7,6 +7,7 @@
 5.  [Network Delay Time](#network-delay-time)
 6.  [Robot Bounded In Circle](#robot-bounded-in-circle)
 7.  [Clone Graph](#clone-graph)
+8.  [Valid Anagram](#valid-anagram)
 
 ---
 
@@ -304,5 +305,31 @@ Node *cloneGraph(Node *node) {
     unordered_map<int, Node*> visitedNodes;
 
     return cloneNode(node, visitedNodes);
+}
+```
+
+### [Valid Anagram](https://leetcode.com/problems/valid-anagram/)<a name="valid-anagram"></a>
+```C++
+bool isAnagram(string s, string t) {
+    vector<int> count(26, 0);
+
+    // Count letter occurences in s
+    for (auto &e : s) {
+        ++count[e - 'a'];
+    }
+
+    // Subtract letter occurences in t
+    for (auto &e : t) {
+        --count[e - 'a'];
+    }
+
+    // Non-zero value indicates different letter counts
+    for (auto &e : count) {
+        if (e != 0) {
+            return false;
+        }
+    }
+
+    return true;
 }
 ```
